@@ -36,6 +36,7 @@ using DragonBoyZ.Application.Extension.Namecball;
 using DragonBoyZ.Application.Train;
 using DragonBoyZ.Application.Extension.Bosses.BigBoss;
 using DragonBoyZ.Sources.Application.Activity.CauCa;
+using DragonBoyZ.Sources;
 
 namespace DragonBoyZ.Application.Menu
 {
@@ -1137,8 +1138,15 @@ namespace DragonBoyZ.Application.Menu
                     #region 80-Pic
                     case 80:
                         {
-                            character.CharacterHandler.SendMessage(Service.OpenUiConfirm(npcId, MenuNpc.Gi().TextCauCa[0], MenuNpc.Gi().MenuCauCa[0], character.InfoChar.Gender));
-                            character.TypeMenu = 0;
+                            if (QuanLyServer.Start_EventCauCa)
+                            {
+                                character.CharacterHandler.SendMessage(Service.OpenUiConfirm(npcId, MenuNpc.Gi().TextCauCa[0], MenuNpc.Gi().MenuCauCa[0], character.InfoChar.Gender));
+                                character.TypeMenu = 0;
+                            }
+                            else
+                            {
+                                character.CharacterHandler.SendMessage(Service.OpenUiSay(npcId, "Hẹn anh dịp khác..."));
+                            }
                             break;
                         }
                     #endregion
@@ -8225,15 +8233,21 @@ break;
                                     character.TypeShop = 0;
                                     break;
                                 }
-                            case 1: //Hướng dẫn thêm
+                            case 1: //Đổi thưởng
+                                {
+                                    character.CharacterHandler.SendMessage(Service.OpenUiConfirm(npcId, MenuNpc.Gi().TextCauCa[4], MenuNpc.Gi().MenuCauCa[3], character.InfoChar.Gender));
+                                    character.TypeMenu = 3;
+                                    break;
+                                }
+                            case 2: //Hướng dẫn thêm
                                 {
                                     character.CharacterHandler.SendMessage(Service.OpenUiConfirm(npcId, MenuNpc.Gi().TextCauCa[2], MenuNpc.Gi().MenuCauCa[2], character.InfoChar.Gender));
                                     character.TypeMenu = 2;
                                     break;
                                 }
-                        } 
+                        }
                         break;
-                        
+
                     }
                 case 1: //MenuCauca
                     {
@@ -8264,6 +8278,101 @@ break;
                             case 1:
                                 {
                                     character.CharacterHandler.SendMessage(Service.OpenUiSay(5, "Giờ đã có thể bắt đầu câu cá. Chat 'cauca' để bắt đầu"));
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        switch (select)
+                        {
+                            case 0:
+                                {
+                                    character.CharacterHandler.SendMessage(Service.OpenUiConfirm(80, MenuNpc.TextDoiThuong(character, $"Đổi '{ItemCache.ItemTemplate((short)CacheCauCa.Id_XoCaXanh).Name}' cần:", CacheCauCa.IdItemNeed_XoCaXanh, CacheCauCa.CountItemNeed_XoCaXanh, 3, CacheCauCa.CountGold_XoCaXanh, CacheCauCa.CountDiamo_XoCaXanh), MenuNpc.MenuDoiThuong(character), character.InfoChar.Gender));
+                                    character.TypeMenu = 4;
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    character.CharacterHandler.SendMessage(Service.OpenUiConfirm(80, MenuNpc.TextDoiThuong(character, $"Đổi '{ItemCache.ItemTemplate((short)CacheCauCa.Id_XoCaVang).Name}' cần:", CacheCauCa.IdItemNeed_XoCaVang, CacheCauCa.CountItemNeed_XoCaVang, 3, CacheCauCa.CountGold_XoCaVang, CacheCauCa.CountDiamo_XoCaVang), MenuNpc.MenuDoiThuong(character), character.InfoChar.Gender));
+                                    character.TypeMenu = 5;
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+                case 4:
+                    {
+                        switch (select)
+                        {
+                            case 0:
+                                {
+                                    if (character.TypeDoiThuong == 3)
+                                    {
+                                        for (int i = 0; i < CacheCauCa.IdItemNeed_XoCaXanh.Count; i++)
+                                        {
+                                            int itemId = CacheCauCa.IdItemNeed_XoCaXanh[i];
+                                            int itemCount = CacheCauCa.CountItemNeed_XoCaXanh[i];
+                                            character.CharacterHandler.RemoveItemBagById((short)itemId, itemCount);
+                                        }
+                                        if (CacheCauCa.CountGold_XoCaXanh != 0)
+                                        {
+                                            character.MineGold(CacheCauCa.CountGold_XoCaXanh);
+                                        }
+                                        if (CacheCauCa.CountDiamo_XoCaXanh != 0)
+                                        {
+                                            character.MineDiamond(CacheCauCa.CountDiamo_XoCaXanh);
+                                        }
+                                        var item = ItemCache.GetItemDefault((short)CacheCauCa.Id_XoCaXanh);
+                                        item.Options.Add(new OptionItem()
+                                        {
+                                            Id = 217,
+                                            Param = 1,
+                                        });
+                                        character.CharacterHandler.AddItemToBag(false, item, "Event Câu cá");
+                                        character.CharacterHandler.SendMessage(Service.ServerMessage("Bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                        character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                        character.CharacterHandler.SendMessage(Service.MeLoadInfo(character));
+                                    }
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+                case 5:
+                    {
+                        switch (select)
+                        {
+                            case 0:
+                                {
+                                    if (character.TypeDoiThuong == 3)
+                                    {
+                                        for (int i = 0; i < CacheCauCa.IdItemNeed_XoCaVang.Count; i++)
+                                        {
+                                            int itemId = CacheCauCa.IdItemNeed_XoCaVang[i];
+                                            int itemCount = CacheCauCa.CountItemNeed_XoCaVang[i];
+                                            character.CharacterHandler.RemoveItemBagById((short)itemId, itemCount);
+                                        }
+                                        if (CacheCauCa.CountGold_XoCaVang != 0)
+                                        {
+                                            character.MineGold(CacheCauCa.CountGold_XoCaVang);
+                                        }
+                                        if (CacheCauCa.CountDiamo_XoCaVang != 0)
+                                        {
+                                            character.MineDiamond(CacheCauCa.CountDiamo_XoCaVang);
+                                        }
+                                        var item = ItemCache.GetItemDefault((short)CacheCauCa.Id_XoCaVang);
+                                        item.Options.Add(new OptionItem()
+                                        {
+                                            Id = 217,
+                                            Param = 1,
+                                        });
+                                        character.CharacterHandler.AddItemToBag(false, item, "Event Câu cá");
+                                        character.CharacterHandler.SendMessage(Service.ServerMessage("Bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                        character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                        character.CharacterHandler.SendMessage(Service.MeLoadInfo(character));
+                                    }
                                     break;
                                 }
                         }

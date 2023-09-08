@@ -52,6 +52,7 @@ using System.Diagnostics;
 using DragonBoyZ.Application.Extension.NamecballWar;
 using static System.Net.Mime.MediaTypeNames;
 using Org.BouncyCastle.Crypto.Engines;
+using DragonBoyZ.Sources;
 
 namespace DragonBoyZ.Application.Main   
 {
@@ -3681,7 +3682,7 @@ namespace DragonBoyZ.Application.Main
                             var role = _session?.Player?.Role;
                             var text = message.Reader.ReadUTF();
                             #region Câu cá
-                            if (text.Contains("cauca"))
+                            if (text.Contains("cauca") && QuanLyServer.Start_EventCauCa)
                             {
                                 if (!character.InfoBuff.IsCauCaThuong && !character.InfoBuff.IsCauCaDacBiet)
                                 {
@@ -4027,7 +4028,6 @@ namespace DragonBoyZ.Application.Main
                                                 {
                                                     if (count > 99) count = 99;
                                                 }
-                                                else count = 9999;
                                             }
                                             catch (Exception)
                                             {

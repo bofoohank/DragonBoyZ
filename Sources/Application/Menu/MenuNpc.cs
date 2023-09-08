@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using DragonBoyZ.Application.Constants;
 using DragonBoyZ.Application.IO;
 using DragonBoyZ.Sources.Application.Activity.CauCa;
 
@@ -19,6 +20,132 @@ namespace DragonBoyZ.Application.Handlers.Menu
             if (_instance == null) _instance = new MenuNpc();
             return _instance;
         }
+
+        #region Menu Đổi vật phẩm
+        public static string TextDoiThuong(Model.Character.Character character, string openingText, List<int> ItemId, List<int> Quantitys, int TypeDoiThuong, int countGold, int countDiamo)
+        {
+            List<string> ListText = new List<string>();
+            ListText.Add($"{ServerUtils.Color("title_brown")}{openingText}");
+            if (ItemId.Count != Quantitys.Count) return "";
+
+            if (countGold == 0 && countDiamo == 0)
+            {
+                for (int i = 0; i < ItemId.Count; i++)
+                {
+                    if (character.CharacterHandler.GetItemBagById(ItemId[i]) != null)
+                    {
+                        var item = character.CharacterHandler.GetItemBagById(ItemId[i]);
+
+                        if (item.Quantity >= Quantitys[i])
+                        {
+                            ListText.Add($"{ServerUtils.Color("blue")}{ItemCache.ItemTemplate((short)(ItemId[i])).Name} {item.Quantity}/{Quantitys[i]}");
+                        }
+                        else
+                        {
+                            TypeDoiThuong = -1;
+                            ListText.Add($"{ServerUtils.Color("red")}{ItemCache.ItemTemplate((short)(ItemId[i])).Name} {item.Quantity}/{Quantitys[i]}");
+                        }
+                    }
+                    else
+                    {
+                        ListText.Add($"{ServerUtils.Color("red")}{ItemCache.ItemTemplate((short)(ItemId[i])).Name} 0/{Quantitys[i]}");
+                        TypeDoiThuong = -1;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < ItemId.Count; i++)
+                {
+                    if (character.CharacterHandler.GetItemBagById(ItemId[i]) != null)
+                    {
+                        var item = character.CharacterHandler.GetItemBagById(ItemId[i]);
+
+                        if (item.Quantity >= Quantitys[i])
+                        {
+                            ListText.Add($"{ServerUtils.Color("blue")}{ItemCache.ItemTemplate((short)(ItemId[i])).Name} {item.Quantity}/{Quantitys[i]}");
+                        }
+                        else
+                        {
+                            TypeDoiThuong = -1;
+                            ListText.Add($"{ServerUtils.Color("red")}{ItemCache.ItemTemplate((short)(ItemId[i])).Name} {item.Quantity}/{Quantitys[i]}");
+                        }
+                    }
+                    else
+                    {
+                        ListText.Add($"{ServerUtils.Color("red")}{ItemCache.ItemTemplate((short)(ItemId[i])).Name} 0/{Quantitys[i]}");
+                        TypeDoiThuong = -1;
+                    }
+                }
+                var gold = character.InfoChar.Gold;
+                var diamo = character.InfoChar.Diamond;
+                if (countGold != 0 && countDiamo != 0)
+                {
+                    if (gold >= countGold && diamo >= countDiamo)
+                    {
+                        ListText.Add($"{ServerUtils.Color("yellow")}Giá vàng: {ServerUtils.GetMoney(gold)}/{countGold}");
+                        ListText.Add($"{ServerUtils.Color("green")}Giá ngọc: {ServerUtils.GetMoney(diamo)}/{countDiamo}");
+                    }
+                    else
+                    {
+                        TypeDoiThuong = -1;
+                        ListText.Add($"{ServerUtils.Color("red")}Giá vàng: {ServerUtils.GetMoney(gold)}/{countGold}");
+                        ListText.Add($"{ServerUtils.Color("red")}Giá ngọc: {ServerUtils.GetMoney(diamo)}/{countDiamo}");
+                    }
+                }
+                else
+                {
+                    if (countGold != 0)
+                    {
+                        if (gold >= countGold)
+                        {
+                            ListText.Add($"{ServerUtils.Color("yellow")}Giá vàng: {ServerUtils.GetMoney(gold)}/{countGold}");
+                        }
+                        else
+                        {
+                            TypeDoiThuong = -1;
+                            ListText.Add($"{ServerUtils.Color("red")}Giá vàng: {ServerUtils.GetMoney(gold)}/{countGold}");
+                        }
+                    }
+                    if (countDiamo != 0)
+                    {
+                        if (diamo >= countDiamo)
+                        {
+                            ListText.Add($"{ServerUtils.Color("green")}Giá ngọc: {ServerUtils.GetMoney(diamo)}/{countDiamo}");
+                        }
+                        else
+                        {
+                            TypeDoiThuong = -1;
+                            ListText.Add($"{ServerUtils.Color("red")}Giá ngọc: {ServerUtils.GetMoney(diamo)}/{countDiamo}");
+                        }
+                    }
+                }
+            }
+            character.TypeDoiThuong = TypeDoiThuong;
+            var Text = "";
+            for (int j = 0; j < ListText.Count; j++)
+            {
+                Text += ListText[j];
+            }
+            return Text;
+        }
+        public static List<string> MenuDoiThuong(Model.Character.Character character)
+        {
+            List<string> result = new List<string>(); // Tạo danh sách kết quả
+
+            if (character.TypeDoiThuong != 3)
+            {
+                result.Add("Từ chối");
+            }
+            else
+            {
+                result.Add("Đổi");
+            }
+
+            return result;
+        }
+
+        #endregion
 
         #region Bảng xếp hạng
         public List<string> TextBXH = new List<string>()
@@ -125,21 +252,23 @@ namespace DragonBoyZ.Application.Handlers.Menu
         #region Event câu cá
         public List<string> TextCauCa = new List<string>()
         {
-            $"{ServerUtils.Color("red")}Giá cá này hôm nay:\n " +
-            $"{ServerUtils.Color("brown")}Cá nóc: {HandlerCauCa.GetGiaCa(1002)/1000000}tr vàng\nCá bảy màu: {HandlerCauCa.GetGiaCa(1003)/1000000}tr vàng\nCá diêu hồng: {HandlerCauCa.GetGiaCa(1004)/1000000}tr vàng",
+            $"{ServerUtils.Color("title_brown")}Giá cá này hôm nay:" +
+            $"{ServerUtils.Color("green")}Cá nóc: {HandlerCauCa.GetGiaCa(1002)/1000000}tr vàng\nCá bảy màu: {HandlerCauCa.GetGiaCa(1003)/1000000}tr vàng\nCá diêu hồng: {HandlerCauCa.GetGiaCa(1004)/1000000}tr vàng",
 
-            $"{ServerUtils.Color("red")}Hãy chọn loại mồi để bắt đầu câu\n" +
-            $"{ServerUtils.Color("brown")}Mồi thường: {CacheCauCa.GiaMoiCauThuong/1000000}tr vàng {CacheCauCa.PercentNormal}% thành công" +
-            $"{ServerUtils.Color("brown")}Mồi đặc biệt: {CacheCauCa.GiaMoiCauDacBiet/1000000}tr vàng {CacheCauCa.PercentSpecial}% thành công",
+            $"{ServerUtils.Color("title_brown")}Hãy chọn loại mồi để bắt đầu câu" +
+            $"{ServerUtils.Color("green")}Mồi thường: {CacheCauCa.GiaMoiCauThuong/1000000}tr vàng {CacheCauCa.PercentNormal}% thành công" +
+            $"{ServerUtils.Color("green")}Mồi đặc biệt: {CacheCauCa.GiaMoiCauDacBiet/1000000}tr vàng {CacheCauCa.PercentSpecial}% thành công",
 
-            $"{ServerUtils.Color("brown")}Nếu không thể sử dụng cần câu hãy bấm vào 'Trợ giúp'",
+            $"{ServerUtils.Color("title_brown")}Nếu không thể sử dụng cần câu hãy bấm vào 'Trợ giúp'",
 
-            $"{ServerUtils.Color("brown")}Hướng dẫn câu cá để sinh tồn tại DragonBoyZ ...\r\n" +
-            $"{ServerUtils.Color("brown")}Mua cần câu và chat 'cauca' để câu cá (Lưu ý phải đứng ở dưới biển mới có tác dụng)\r\n" +
-            $"{ServerUtils.Color("brown")}Với mồi câu đặc biệt sẽ tăng tỉ lệ ra cá đắt tiền hơn\r\n" +
-            $"{ServerUtils.Color("brown")}Chỉ khi sử dụng mồi đặc biệt mới có thể rơi ra phụ kiện đeo lưng, cải trang,...\r\n" +
-            $"{ServerUtils.Color("brown")}Giá cá sẽ thay đổi thường xuyên\r\n" +
-            $"{ServerUtils.Color("brown")}Chúc anh có trải nghiệm vui vẻ"
+            $"Hướng dẫn câu cá để sinh tồn tại DragonBoyZ ...\r\n" +
+            $"Mua cần câu và chat 'cauca' để câu cá (Lưu ý phải đứng ở dưới biển mới có tác dụng)\r\n" +
+            $"Với mồi câu đặc biệt sẽ tăng tỉ lệ ra cá đắt tiền hơn\r\n" +
+            $"Chỉ khi sử dụng mồi đặc biệt mới có thể rơi ra phụ kiện đeo lưng, cải trang,...\r\n" +
+            $"Giá cá sẽ thay đổi thường xuyên\r\n" +
+            $"Chúc anh có trải nghiệm vui vẻ",
+
+            $"{ServerUtils.Color("title_brown")}Hãy chọn phần thưởng"
 
         };
         public List<List<string>> MenuCauCa = new List<List<string>>()
@@ -147,6 +276,7 @@ namespace DragonBoyZ.Application.Handlers.Menu
             new List<string>()
             {
                 "Cửa hàng",
+                "Đổi thưởng",
                 "Hướng\ndẫn thêm"
             },
             new List<string>()
@@ -158,7 +288,12 @@ namespace DragonBoyZ.Application.Handlers.Menu
             {
                 "Hướng dẫn",
                 "Trợ giúp",
-            }
+            },
+            new List<string>()
+            {
+                "Xô\nCá xanh",
+                "Xô\nCá vàng"
+            },
         };
         public static List<List<string>> TextTrangThai = new List<List<string>>()
         {
