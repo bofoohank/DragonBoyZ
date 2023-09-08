@@ -27,6 +27,7 @@ using DragonBoyZ.Application.Extension;
 using DragonBoyZ.Application.Handlers.Menu;
 using DragonBoyZ.Application.Extension.Dragon;
 using System.Runtime.InteropServices;
+using DragonBoyZ.Sources.Application.Activity.CauCa;
 
 namespace DragonBoyZ.Application.Handlers.Item
 {
@@ -1009,46 +1010,6 @@ namespace DragonBoyZ.Application.Handlers.Item
                             return;
                         }
 
-                            if (itemSell.Id == 1002)
-                            {
-                                var inputBanCa = new List<InputBox>();
-                                var countCa = new InputBox()
-                                {
-                                    Name = "Nhập số cá bạn muốn bán",
-                                    Type = 1,
-                                };
-                                inputBanCa.Add(countCa);
-                                character.CharacterHandler.SendMessage(Service.ShowInput("Bán cá số lượng lớn", inputBanCa));
-                                character.TypeInput = 28;
-                                return;
-                            }
-                            if (itemSell.Id == 1003)
-                            {
-                                var inputBanCa = new List<InputBox>();
-                                var countCa = new InputBox()
-                                {
-                                    Name = "Nhập số cá bạn muốn bán",
-                                    Type = 1,
-                                };
-                                inputBanCa.Add(countCa);
-                                character.CharacterHandler.SendMessage(Service.ShowInput("Bán cá số lượng lớn", inputBanCa));
-                                character.TypeInput = 29;
-                                return;
-                            }
-                            if (itemSell.Id == 1004)
-                            {
-                                var inputBanCa = new List<InputBox>();
-                                var countCa = new InputBox()
-                                {
-                                    Name = "Nhập số cá bạn muốn bán",
-                                    Type = 1,
-                                };
-                                inputBanCa.Add(countCa);
-                                character.CharacterHandler.SendMessage(Service.ShowInput("Bán cá số lượng lớn", inputBanCa));
-                                character.TypeInput = 30;
-                                return;
-                            }
-
                             if (itemSell.Id == 457)
                             {
                                 //   gold = DataCache.GiaBanThoiVang;
@@ -1977,6 +1938,218 @@ namespace DragonBoyZ.Application.Handlers.Item
 
                 switch (itemTemplate.Id)
                 {
+                    case 1005:
+                        {
+                            if (character.LengthBagNull() < 5)
+                            {
+                                character.CharacterHandler.SendMessage(Service.ServerMessage("Yêu cầu hành trang còn 5 ô trống"));
+                                return;
+                            }
+                            character.CharacterHandler.RemoveItemBagByIndex(index, 1);
+                            character.CharacterHandler.SendMessage(Service.SendBag(character));
+                            if (ServerUtils.RandomNumber(100) > CacheCauCa.Percent_OpenXoCaXanh_Vang)
+                            {
+                                if (ServerUtils.RandomNumber(100) < 60)
+                                {
+                                    var listItem = CacheCauCa.Item_CaiTrangCC;
+                                    var item = ItemCache.GetItemDefault((short)(listItem[ServerUtils.RandomNumber(listItem.Count)]));
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 50,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 77,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 103,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    if (ServerUtils.RandomNumber(100) >= CacheCauCa.PercentDropItemVV)
+                                    {
+                                        item.Options.Add(new OptionItem()
+                                        {
+                                            Id = 93,
+                                            Param = ServerUtils.RandomNumber(1, 7)
+                                        });
+                                    }
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 30,
+                                        Param = 1
+                                    });
+                                    character.CharacterHandler.AddItemToBag(false, item, "Sử dụng Xô cá");
+                                    character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage("Chúc mừng bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                }
+                                else
+                                {
+                                    var listItem = CacheCauCa.Item_PhuKien;
+                                    var item = ItemCache.GetItemDefault((short)(listItem[ServerUtils.RandomNumber(listItem.Count)]));
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 50,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 77,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 103,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    if (ServerUtils.RandomNumber(100) >= CacheCauCa.PercentDropItemVV)
+                                    {
+                                        item.Options.Add(new OptionItem()
+                                        {
+                                            Id = 93,
+                                            Param = ServerUtils.RandomNumber(1, 7)
+                                        });
+                                    }
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 30,
+                                        Param = 1
+                                    });
+                                    character.CharacterHandler.AddItemToBag(false, item, "Sử dụng Xô cá");
+                                    character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage("Chúc mừng bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                }
+                            }
+                            else
+                            {
+                                if (ServerUtils.RandomNumber(100) < 50)
+                                {
+                                    var gold = ServerUtils.RandomNumber(1, 3) * 100000;
+                                    character.PlusGold(gold);
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage($"Chúc mừng bạn đã nhận được {gold} vàng"));
+                                }
+                                else
+                                {
+                                    var listItem = CacheCauCa.Item_Cap2;
+                                    var item = ItemCache.GetItemDefault((short)(listItem[ServerUtils.RandomNumber(listItem.Count)]));
+                                    character.CharacterHandler.AddItemToBag(false, item, "Sử dụng Xô cá");
+                                    character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage("Chúc mừng bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                }
+
+                            }
+                            break;
+                        }
+                    case 1006:
+                        {
+                            if (character.LengthBagNull() < 5)
+                            {
+                                character.CharacterHandler.SendMessage(Service.ServerMessage("Yêu cầu hành trang còn 5 ô trống"));
+                                return;
+                            }
+                            character.CharacterHandler.RemoveItemBagByIndex(index, 1);
+                            character.CharacterHandler.SendMessage(Service.SendBag(character));
+                            if (ServerUtils.RandomNumber(100) > CacheCauCa.Percent_OpenXoCaXanh_Vang)
+                            {
+                                if (ServerUtils.RandomNumber(100) < 60)
+                                {
+                                    var listItem = CacheCauCa.Item_CaiTrangSanhDieu;
+                                    var item = ItemCache.GetItemDefault((short)(listItem[ServerUtils.RandomNumber(listItem.Count)]));
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 50,
+                                        Param = ServerUtils.RandomNumber(20, 30)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 77,
+                                        Param = ServerUtils.RandomNumber(20, 30)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 103,
+                                        Param = ServerUtils.RandomNumber(20, 30)
+                                    });
+                                    if (ServerUtils.RandomNumber(100) >= CacheCauCa.PercentDropItemVV)
+                                    {
+                                        item.Options.Add(new OptionItem()
+                                        {
+                                            Id = 93,
+                                            Param = ServerUtils.RandomNumber(1, 7)
+                                        });
+                                    }
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 30,
+                                        Param = 1
+                                    });
+                                    character.CharacterHandler.AddItemToBag(false, item, "Sử dụng Xô cá");
+                                    character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage("Chúc mừng bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                }
+                                else
+                                {
+                                    var listItem = CacheCauCa.Item_PhuKien;
+                                    var item = ItemCache.GetItemDefault((short)(listItem[ServerUtils.RandomNumber(listItem.Count)]));
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 50,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 77,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 103,
+                                        Param = ServerUtils.RandomNumber(15, 25)
+                                    });
+                                    if (ServerUtils.RandomNumber(100) >= CacheCauCa.PercentDropItemVV)
+                                    {
+                                        item.Options.Add(new OptionItem()
+                                        {
+                                            Id = 93,
+                                            Param = ServerUtils.RandomNumber(1, 7)
+                                        });
+                                    }
+                                    item.Options.Add(new OptionItem()
+                                    {
+                                        Id = 30,
+                                        Param = 1
+                                    });
+                                    character.CharacterHandler.AddItemToBag(false, item, "Sử dụng Xô cá");
+                                    character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage("Chúc mừng bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                }
+                            }
+                            else
+                            {
+                                if (ServerUtils.RandomNumber(100) < 50)
+                                {
+                                    var gold = ServerUtils.RandomNumber(1, 3) * 1000000;
+                                    character.PlusGold(gold);
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage($"Chúc mừng bạn đã nhận được {gold} vàng"));
+                                }
+                                else
+                                {
+                                    var listItem = CacheCauCa.Item_Cap2;
+                                    var item = ItemCache.GetItemDefault((short)(listItem[ServerUtils.RandomNumber(listItem.Count)]));
+                                    character.CharacterHandler.AddItemToBag(false, item, "Sử dụng Xô cá");
+                                    character.CharacterHandler.SendMessage(Service.SendBag(character));
+                                    character.CharacterHandler.SendMessage(Service.ServerMessage("Chúc mừng bạn đã nhận được " + ItemCache.ItemTemplate(item.Id).Name));
+                                }
+
+                            }
+                            break;
+                        }
+
+
+
+
                     case 1269:
                         if (character.LengthBagNull() < 5)
                         {

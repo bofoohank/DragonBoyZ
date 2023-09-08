@@ -1,6 +1,5 @@
 ﻿using DragonBoyZ.Application.Constants;
 using DragonBoyZ.Application.Handlers.Menu;
-using DragonBoyZ.Application.Helper;
 using DragonBoyZ.Application.IO;
 using DragonBoyZ.Application.Main;
 using DragonBoyZ.DatabaseManager;
@@ -8,8 +7,6 @@ using DragonBoyZ.Model.Character;
 using DragonBoyZ.Model.Item;
 using DragonBoyZ.Model.Option;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -50,6 +47,26 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                                 if (ServerUtils.RandomNumber(0, 100) < CacheCauCa.PercentNormal)
                                 {
                                     character.CharacterHandler.SendZoneMessage(Service.PublicChat(character.Id, thangCong));
+                                    if (CacheCauCa.Exp_SM != 0 && CacheCauCa.Exp_TN != 0)
+                                    {
+                                        character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM);
+                                        character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN);
+                                        character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM));
+                                        character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN));
+                                    }
+                                    else
+                                    {
+                                        if (CacheCauCa.Exp_SM != 0)
+                                        {
+                                            character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM));
+                                        }
+                                        if (CacheCauCa.Exp_TN != 0)
+                                        {
+                                            character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN));
+                                        }    
+                                    }    
                                     int idLoaiCaCauDuoc = RandomLoaiCaThuong();
                                     var item = ItemCache.GetItemDefault((short)idLoaiCaCauDuoc);
                                     item.Quantity = 1;
@@ -61,6 +78,26 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                                 else
                                 {
                                     character.CharacterHandler.SendZoneMessage(Service.PublicChat(character.Id, thatBai));
+                                    if (CacheCauCa.Exp_SM != 0 && CacheCauCa.Exp_TN != 0)
+                                    {
+                                        character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM/2);
+                                        character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN/2);
+                                        character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM/2));
+                                        character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN/2));
+                                    }
+                                    else
+                                    {
+                                        if (CacheCauCa.Exp_SM != 0)
+                                        {
+                                            character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM/2);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM/2));
+                                        }
+                                        if (CacheCauCa.Exp_TN != 0)
+                                        {
+                                            character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN/2);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN/2));
+                                        }
+                                    }
                                 }
                             };
                             var task = new Task(Action);
@@ -102,6 +139,26 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                                     if (ServerUtils.RandomNumber(0, 100) < CacheCauCa.PercentDropItem)//Tỷ lệ ra cải trang, vpdl
                                     {
                                         character.CharacterHandler.SendZoneMessage(Service.PublicChat(character.Id, thangCong));
+                                        if (CacheCauCa.Exp_SM != 0 && CacheCauCa.Exp_TN != 0)
+                                        {
+                                            character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM);
+                                            character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM));
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN));
+                                        }
+                                        else
+                                        {
+                                            if (CacheCauCa.Exp_SM != 0)
+                                            {
+                                                character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM);
+                                                character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM));
+                                            }
+                                            if (CacheCauCa.Exp_TN != 0)
+                                            {
+                                                character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN);
+                                                character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN));
+                                            }
+                                        }
                                         int index = ServerUtils.RandomNumber(CacheCauCa.IdCaiTrangCauCa.Count);
                                         short idCaiTrangCauCa = (short)CacheCauCa.IdCaiTrangCauCa[index];
                                         var item = ItemCache.GetItemDefault(idCaiTrangCauCa);
@@ -153,6 +210,26 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                                 else
                                 {
                                     character.CharacterHandler.SendZoneMessage(Service.PublicChat(character.Id, thatBai));
+                                    if (CacheCauCa.Exp_SM != 0 && CacheCauCa.Exp_TN != 0)
+                                    {
+                                        character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM / 2);
+                                        character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN / 2);
+                                        character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM / 2));
+                                        character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN / 2));
+                                    }
+                                    else
+                                    {
+                                        if (CacheCauCa.Exp_SM != 0)
+                                        {
+                                            character.CharacterHandler.PlusPower(CacheCauCa.Exp_SM / 2);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(0, CacheCauCa.Exp_SM / 2));
+                                        }
+                                        if (CacheCauCa.Exp_TN != 0)
+                                        {
+                                            character.CharacterHandler.PlusPotential(CacheCauCa.Exp_TN / 2);
+                                            character.CharacterHandler.SendMessage(Service.UpdateExp(1, CacheCauCa.Exp_TN / 2));
+                                        }
+                                    }
                                 }
                             };
                             var task = new Task(Action);
@@ -171,7 +248,7 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                         }
                         break;
                     }
-            }    
+            }
 
         }
 
@@ -188,12 +265,12 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                 else
                 {
                     return 1003;
-                }    
-            }      
+                }
+            }
             else
             {
                 return 1002;
-            }    
+            }
         }
         static int RandomLoaiCaDacBiet()
         {
@@ -203,12 +280,12 @@ namespace DragonBoyZ.Sources.Application.Activity.CauCa
                 if (random < (CacheCauCa.PercentSpecial_CaDieuHong))
                 {
                     return 1004;
-                } 
+                }
                 else
                 {
                     return 1003;
-                }    
-                    
+                }
+
             }
             else
             {

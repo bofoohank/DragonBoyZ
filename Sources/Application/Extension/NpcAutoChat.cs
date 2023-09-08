@@ -22,7 +22,14 @@ namespace DragonBoyZ.Sources.Application.Extension
                 var data = NpcAutoChat.GetAllDataByTypeOne();
                 foreach (var item in data)
                 {
-                    ClientManager.Gi().SendMessage(Service.NpcChat((short)item.npcId, item.text));
+                    if (!QuanLyServer.Start_EventCauCa && item.npcId == 80)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        ClientManager.Gi().SendMessage(Service.NpcChat((short)item.npcId, item.text));
+                    }
                 }
             };
 

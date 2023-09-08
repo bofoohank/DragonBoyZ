@@ -380,6 +380,9 @@ namespace DragonBoyZ.Application.IO
                 "light-green" => "\b|4|",
                 "light-blue" => "\b|5|",
                 "red" => "\b|7|",
+                "yellow" => "\b|8|",
+                "black" => "\b|6|",
+                "title_brown" => "|0|",
                 _ => ""
             };
         }

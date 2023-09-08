@@ -14,6 +14,7 @@ using DragonBoyZ.Application.Constants;
 using DragonBoyZ.Application.Interfaces.Monster;
 using DragonBoyZ.Model.Option;
 using DragonBoyZ.Sources.Application.Activity.CauCa;
+using DragonBoyZ.Sources;
 
 namespace DragonBoyZ.Application.Extension.Bosses.BigBoss
 {
@@ -119,7 +120,11 @@ namespace DragonBoyZ.Application.Extension.Bosses.BigBoss
         public void Refesh()
         {
             Server.Gi().Logger.Print(" [____]\n", "red");
-            Server.Gi().Logger.PrtColor("yellow", "Update", "darkyellow", $"Ca Noc:{HandlerCauCa.GetGiaCa(1002)/1000000}tr -- Ca Bay Mau:{HandlerCauCa.GetGiaCa(1003) / 1000000}tr -- Ca Dieu Hong:{HandlerCauCa.GetGiaCa(1004) / 1000000}tr");
+            if (QuanLyServer.Start_EventCauCa)
+            {
+                Server.Gi().Logger.PrtColor("cyan", "Events", "darkcyan", "Start Cau Ca");
+                Server.Gi().Logger.PrtColor("yellow", "Update", "darkyellow", $"Ca Noc:{HandlerCauCa.GetGiaCa(1002) / 1000000}tr -- Ca Bay Mau:{HandlerCauCa.GetGiaCa(1003) / 1000000}tr -- Ca Dieu Hong:{HandlerCauCa.GetGiaCa(1004) / 1000000}tr");
+            }
             if (!refeshAllGau)
             {
                 refeshAllGau = true;

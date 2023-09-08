@@ -52,6 +52,7 @@ using System.Diagnostics;
 using DragonBoyZ.Application.Extension.NamecballWar;
 using static System.Net.Mime.MediaTypeNames;
 using Org.BouncyCastle.Crypto.Engines;
+using DragonBoyZ.Sources;
 
 namespace DragonBoyZ.Application.Main   
 {
@@ -3681,7 +3682,7 @@ namespace DragonBoyZ.Application.Main
                             var role = _session?.Player?.Role;
                             var text = message.Reader.ReadUTF();
                             #region Câu cá
-                            if (text.Contains("cauca"))
+                            if (text.Contains("cauca") && QuanLyServer.Start_EventCauCa)
                             {
                                 if (!character.InfoBuff.IsCauCaThuong && !character.InfoBuff.IsCauCaDacBiet)
                                 {
@@ -4027,7 +4028,6 @@ namespace DragonBoyZ.Application.Main
                                                 {
                                                     if (count > 99) count = 99;
                                                 }
-                                                else count = 9999;
                                             }
                                             catch (Exception)
                                             {
@@ -5323,7 +5323,31 @@ Server.Gi().Logger.Error($"Error Create New Char in Controller.cs: {e.Message} \
             //    return;
             //}
 
-            switch (task.Id, mapNext.Id)
+            if (task.Id == 1 && mapNext.Id == 44 || mapNext.Id == 15 || mapNext.Id == 43 || mapNext.Id == 8 || mapNext.Id == 42 || mapNext.Id == 1)
+            {
+                mapOld.OutZone(character, mapOld.Id);
+                character.CharacterHandler.SetUpPosition(mapNext.Id, mapOld.Id);
+                mapOld.JoinZone((Character)character, character.InfoChar.ZoneId);
+                character.CharacterHandler.SendMessage(Service.ServerMessage("Bạn chưa thể đến khu vực này"));
+                return;
+            }
+            if (task.Id < 9 && mapNext.Id == 5 || mapNext.Id == 13 || mapNext.Id == 20)
+            {
+                mapOld.OutZone(character, mapOld.Id);
+                character.CharacterHandler.SetUpPosition(mapNext.Id, mapOld.Id);
+                mapOld.JoinZone((Character)character, character.InfoChar.ZoneId);
+                character.CharacterHandler.SendMessage(Service.ServerMessage("Bạn phải làm nhiệm vụ để qua khu vực này"));
+                return;
+            }
+            if (task.Id < 24 && mapNext.Id == 80)
+            {
+                mapOld.OutZone(character, mapOld.Id);
+                character.CharacterHandler.SetUpPosition(mapNext.Id, mapOld.Id);
+                mapOld.JoinZone((Character)character, character.InfoChar.ZoneId);
+                character.CharacterHandler.SendMessage(Service.ServerMessage("Bạn phải làm nhiệm vụ Fide để qua khu vực này"));
+                return;
+            }
+            /*switch (task.Id, mapNext.Id)
             {
                 case (1, 44 or 15 or 43 or 8 or 42 or 1):
                     mapOld.OutZone(character, mapOld.Id);
@@ -5345,8 +5369,8 @@ Server.Gi().Logger.Error($"Error Create New Char in Controller.cs: {e.Message} \
                     mapOld.JoinZone((Character)character, character.InfoChar.ZoneId);
                     character.CharacterHandler.SendMessage(Service.ServerMessage("Bạn phải làm nhiệm vụ Fide để qua khu vực này"));
                     return;
-            }                
-                   
+            }  */
+
             var zoneNext = mapNext.GetZoneNotMaxPlayer();
             if (DataCache.IdMapSpecial.Contains(mapNext.Id))
             {

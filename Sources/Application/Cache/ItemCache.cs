@@ -114,7 +114,7 @@ namespace DragonBoyZ.Application.Constants
 
         public static bool IsUnlimitItem(short id)
         {
-            switch(id)
+            switch (id)
             {
                 case 590:
                 case 1066:
@@ -128,9 +128,10 @@ namespace DragonBoyZ.Application.Constants
                 case 1235:
                 case >= 14 and <= 21:
                 case >= 220 and <= 224:
-                {
-                    return true;
-                }                
+                case >= 1002 and <= 1006:
+                    {
+                        return true;
+                    }
                 default: return false;
             }
         }
